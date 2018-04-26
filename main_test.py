@@ -28,7 +28,7 @@ def FinchRun():
 	while (finchRunning):
 		if (fStates[curState] == "LightSeek"):
 			# Move at rushing speed
-			
+
 
 			# Check for obstacle
 			if (finch.obstacle):
@@ -56,7 +56,7 @@ def FinchRun():
 			if (curState != 2):
 				if (finch.obstacle == True):
 					curState = 1
-		elif (fStaets[curState] == "WarmSeek"):
+		elif (fStates[curState] == "WarmSeek"):
 			# Wander until warmth has been found
 			
 			if (finch.obstacle == True):
