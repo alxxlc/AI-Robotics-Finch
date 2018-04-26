@@ -11,7 +11,7 @@ finch = Finch()
 fStates = ["LightSeek", "ObstAvoid", "Rest", "WarmSeek"]
 curState = 0
 
-wantedLight = .7 # Temp Value: 0-1.0
+wantedLight = 1.0 # Temp Value: 0-1.0
 wantedTemp = 30 # Degrees in C
 wanderSpeedMax = .5
 wanderSpeedMin = .2
@@ -31,45 +31,50 @@ def FinchRun():
 		if (fStates[curState] == "LightSeek"):
 			while(fStates[curState] == "LightSeek"):
 				left_obstacle, right_obstacle = finch.obstacle()
-				if left_obstacle:
-					print("left obstacle")
-				if right_obstacle:
-					print("right obstacle")
+
 				finch.led(0, 0, 0)
 				# Move at rushing speed
 				prev_left_light, prev_right_light = finch.light()
 				prev_light_cumulative = prev_left_light + prev_right_light
-				#print(prev_light_cumulative, "  previous light")
-				finch.wheels(0.5, 0.5)
-				time.sleep(1.0)
-				finch.wheels(0, 0)
+				light_difference = prev_right_light - prev_left_light
+				light_difference *= 4
+				left_coefficient = light_difference + .5
+				right_coefficient = .5 - light_difference
+				finch.wheels(left_coefficient, right_coefficient)
+				#print(prev_left_light, " left light", prev_right_light, " right light")
+
+				'''
 				cur_left_light, cur_right_light = finch.light()
 				cur_light_cumulative = cur_left_light + cur_right_light
-				#print(cur_light_cumulative, "  current light")
+				print(cur_left_light, " ", cur_right_light,  " current light left, right")
 				if(cur_light_cumulative > prev_light_cumulative):
-					finch.wheels(0.2, 0.2)
+					#finch.wheels(0.3, 0.3)
 					print("light level has increased")
-					time.sleep(0.5)
-					finch.wheels(0,0)
-					if(cur_right_light > prev_right_light):
+					#time.sleep(0.5)
+					#finch.wheels(0,0)
+					if(cur_right_light > prev_right_ light):
 						print("light source detected to the right")
-						finch.wheels(.2, -.2)
-						time.sleep(.7)
-						finch.wheels(0.2, 0.2)
-						time.sleep(.7)
+						finch.wheels(.4, -.4)
+						time.sleep(1.5)
+						finch.wheels(0.4, 0.4)
+						time.sleep(1.0)
 						finch.wheels(0,0)
+						time.sleep(2)
 					if(cur_left_light > prev_left_light):
 						print("light source detected to the left")
-						finch.wheels(-.5, .5)
-						time.sleep(.7)
-						finch.wheels(0.5, 0.5)
-						time.sleep(.7)
+						finch.wheels(-.4, .4)
+						time.sleep(1.5)
+						finch.wheels(0.4, 0.4)
+						time.sleep(1.0)
 						finch.wheels(0, 0)
+						time.sleep(2)
 				else:
 					print("moving forward looking for light")
 					finch.wheels(.3, .3)
 					time.sleep(.5)
 					finch.wheels(0, 0)
+					time.sleep(2)
+				'''
 
 				# Check for obstacle
 				left_obstacle, right_obstacle = finch.obstacle()
@@ -86,25 +91,24 @@ def FinchRun():
 				# Turn to the right until obstacle is gone
 				left_obstacle, right_obstacle = finch.obstacle()
 				if(right_obstacle and not left_obstacle):
-					finch.wheels(-.5, -.5)
+					print("right obstacle")
+					finch.wheels(-.2, -.2)
 					time.sleep(2.0)
-					finch.wheels(-.5, .5)
+					finch.wheels(-.2, .2)
 					time.sleep(2.0)
 				elif(left_obstacle and not right_obstacle):
-					finch.wheels(-5, -.5)
+					print("left obstacle")
+					finch.wheels(-2, -.2)
 					time.sleep(2.0)
-					finch.wheels(.5, -.5)
+					finch.wheels(.2, -.2)
 					time.sleep(2.0)
 				elif(left_obstacle and right_obstacle):
-					finch.wheels(-.5, -.5)
+					finch.wheels(-.3, -.3)
 					time.sleep(2.0)
 
+
 				cur_left_light, cur_right_light = finch.light()
-				#left_obstacle, right_obstacle = finch.obstacle()
-				if left_obstacle:
-					print("left obstacle")
-				if right_obstacle:
-					print("right obstacle")
+				left_obstacle, right_obstacle = finch.obstacle()
 				if ((not right_obstacle) and (not left_obstacle)):
 					print("no obstacle")
 					if (cur_right_light < wantedLight and cur_left_light < wantedLight):
