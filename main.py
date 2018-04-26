@@ -11,7 +11,7 @@ finch = Finch()
 fStates = ["LightSeek", "ObstAvoid", "Rest", "WarmSeek"]
 curState = 0
 
-wantedLight = 1.0 # Temp Value: 0-1.0
+wantedLight = .7 # Temp Value: 0-1.0
 wantedTemp = 30 # Degrees in C
 wanderSpeedMax = .5
 wanderSpeedMin = .2
@@ -19,6 +19,7 @@ rushSpeedMax = 1
 rushSpeedMin = .5
 curSpeedL = 0
 curSpeedR = 0
+
 
 def FinchRun():
 	global fStates
@@ -40,36 +41,38 @@ def FinchRun():
 				prev_light_cumulative = prev_left_light + prev_right_light
 				#print(prev_light_cumulative, "  previous light")
 				finch.wheels(0.5, 0.5)
-				time.sleep(.5)
+				time.sleep(1.0)
 				finch.wheels(0, 0)
 				cur_left_light, cur_right_light = finch.light()
 				cur_light_cumulative = cur_left_light + cur_right_light
 				#print(cur_light_cumulative, "  current light")
 				if(cur_light_cumulative > prev_light_cumulative):
-					finch.wheels(0.5, 0.5)
+					finch.wheels(0.2, 0.2)
 					print("light level has increased")
 					time.sleep(0.5)
 					finch.wheels(0,0)
 					if(cur_right_light > prev_right_light):
 						print("light source detected to the right")
-						finch.wheels(.5, -.5)
-						time.sleep(2)
-						finch.wheels(0.5, 0.5)
-						time.sleep(2)
+						finch.wheels(.2, -.2)
+						time.sleep(.7)
+						finch.wheels(0.2, 0.2)
+						time.sleep(.7)
 						finch.wheels(0,0)
-					elif(cur_left_light > prev_left_light):
+					if(cur_left_light > prev_left_light):
 						print("light source detected to the left")
 						finch.wheels(-.5, .5)
-						time.sleep(2)
+						time.sleep(.7)
 						finch.wheels(0.5, 0.5)
-						time.sleep(1)
+						time.sleep(.7)
 						finch.wheels(0, 0)
 				else:
-					finch.wheels(.5, .5)
+					print("moving forward looking for light")
+					finch.wheels(.3, .3)
 					time.sleep(.5)
 					finch.wheels(0, 0)
 
 				# Check for obstacle
+				left_obstacle, right_obstacle = finch.obstacle()
 				cur_left_light, cur_right_light = finch.light()
 				if (right_obstacle or left_obstacle):
 					curState = 1
@@ -84,17 +87,17 @@ def FinchRun():
 				left_obstacle, right_obstacle = finch.obstacle()
 				if(right_obstacle and not left_obstacle):
 					finch.wheels(-.5, -.5)
-					time.sleep(5.0)
+					time.sleep(2.0)
 					finch.wheels(-.5, .5)
-					time.sleep(5.0)
+					time.sleep(2.0)
 				elif(left_obstacle and not right_obstacle):
 					finch.wheels(-5, -.5)
-					time.sleep(5.0)
+					time.sleep(2.0)
 					finch.wheels(.5, -.5)
-					time.sleep(5.0)
+					time.sleep(2.0)
 				elif(left_obstacle and right_obstacle):
 					finch.wheels(-.5, -.5)
-					time.sleep(5.0)
+					time.sleep(2.0)
 
 				cur_left_light, cur_right_light = finch.light()
 				#left_obstacle, right_obstacle = finch.obstacle()
