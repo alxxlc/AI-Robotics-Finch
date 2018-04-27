@@ -44,8 +44,20 @@ def FinchRun():
 			########## Setup #############################
 			light_mod = (left_light + right_light) / 2
 			if (light_mod > wantedLight): light_mod = wantedLight
-			light_mod = (light_mod / wantedLight) * 255
-			finch.led((255 - light_mod), light_mod, 0)
+			light_mod = (light_mod / wantedLight)
+
+			green_light = 0
+			red_light = 0
+
+			# set green value
+			if (light_mod > .3):
+				green_light = 255 * ((light_mod - .3) / .7)
+			
+			# set red value
+			if (light_mod < .6):
+				red_light = 255 - (255 * (light_mod / .6))
+			
+			finch.led(red_light, green_light, 0)
 
 			########### Perform Actions ###################
 			light_difference = right_light - left_light
