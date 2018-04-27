@@ -16,6 +16,7 @@ curState = 0
 #### CONSTANTS ####
 # Sensor values
 wantedLight = .27
+restLight = wantedLight - .1
 
 # Move speeds
 wanderSpeedMax = .5
@@ -140,7 +141,7 @@ def FinchRun():
 			left_light, right_light = finch.light()
 
 			########### State Changes #####################
-			if ((right_light < wantedLight) and (left_light < wantedLight)):
+			if ((right_light < restLight) and (left_light < restLight)):
 				curState = 0
 				print(fStates[curState])
 
