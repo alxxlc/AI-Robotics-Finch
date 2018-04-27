@@ -35,6 +35,11 @@ def FinchRun():
 
 	left_obstacle, right_obstacle = finch.obstacle()
 	left_light, right_light = finch.light()
+	
+	green_light = 0
+	red_light = 0
+	prev_green_light = 0
+	prev_red_light = 0
 
 	while (finchRunning):
 		if (fStates[curState] == "LightSeek"):
@@ -50,14 +55,19 @@ def FinchRun():
 			red_light = 0
 
 			# set green value
-			if (light_mod > .3):
-				green_light = 255 * ((light_mod - .3) / .7)
+			if (light_mod > .2):
+				green_light = 255 * ((light_mod - .2) / .8)
+				green_light = (green_light + prev_green_light) / 2
 			
 			# set red value
-			if (light_mod < .6):
-				red_light = 255 - (255 * (light_mod / .6))
+			if (light_mod < .7):
+				red_light = 255 - (255 * (light_mod / .7))
+				red_light = (red_light + prev_red_light) / 2
 			
 			finch.led(red_light, green_light, 0)
+
+			prev_green_light = green_light
+			prev_red_light = red_light
 
 			########### Perform Actions ###################
 			light_difference = right_light - left_light
