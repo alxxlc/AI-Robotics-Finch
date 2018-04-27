@@ -30,13 +30,12 @@ def FinchRun():
 	global curState
 	finchRunning = True
 
-	left_light = 0
-	right_light = 0
-	left_obstacle = False
-	right_obstacle = False
+	left_light, right_light = finch.light()
+	left_obstacle, right_obstacle = finch.obstacle()
 
 	while (finchRunning):
 		if (fStates[curState] == "LightSeek"):
+
 			## Debug code
 			# print(finch.temperature())
 
@@ -64,8 +63,9 @@ def FinchRun():
 
 		elif (fStates[curState] == "ObstAvoid"):
 			### Debugging
+			left_obstacle, right_obstacle = finch.obstacle()
 			print("left:", left_obstacle, "\nright:", right_obstacle)
-
+			#print("2 left:", left_obstacle, "\n 2 right:", right_obstacle)
 			########### Perform Actions ###################
 			# Turn to the right until obstacle is gone
 			if(right_obstacle and (not left_obstacle)):
@@ -73,17 +73,17 @@ def FinchRun():
 				finch.wheels(-.3, -.3)
 				time.sleep(1.7)
 				finch.wheels(-.3, .3)
-				time.sleep(1.7)
-				#finch.wheels(.5, .5)
-				#time.sleep(1.5)
+				time.sleep(1)
+				finch.wheels(.5, .5)
+				time.sleep(1)
 			elif(left_obstacle and (not right_obstacle)):
 				print("left obstacle")
 				finch.wheels(-.3, -.3)
 				time.sleep(1.7)
 				finch.wheels(.3, -.3)
-				time.sleep(1.7)
-				#finch.wheels(.5, .5)
-				#time.sleep(1.5)
+				time.sleep(1)
+				finch.wheels(.5, .5)
+				time.sleep(1)
 			elif(left_obstacle and right_obstacle):
 				finch.wheels(-.3, -.3)
 				time.sleep(2.0)
@@ -93,7 +93,7 @@ def FinchRun():
 			left_obstacle, right_obstacle = finch.obstacle()
 
 			########### State Changes #####################
-			if ((not right_obstacle) and (not left_obstacle)):
+			if (not right_obstacle and (not left_obstacle)):
 				if ((right_light < wantedLight) and (left_light < wantedLight)):
 					curState = 0
 					print(fStates[curState])
