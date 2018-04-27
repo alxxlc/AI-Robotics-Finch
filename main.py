@@ -11,7 +11,7 @@ finch = Finch()
 fStates = ["LightSeek", "ObstAvoid", "Rest", "WarmSeek"]
 curState = 0
 
-wantedLight = 1.0 # Temp Value: 0-1.0
+wantedLight = .27 # Temp Value: 0-1.0
 wantedTemp = 30 # Degrees in C
 wanderSpeedMax = .5
 wanderSpeedMin = .2
@@ -31,15 +31,15 @@ def FinchRun():
 		if (fStates[curState] == "LightSeek"):
 			while(fStates[curState] == "LightSeek"):
 				left_obstacle, right_obstacle = finch.obstacle()
-
+				print(finch.temperature())
 				finch.led(0, 0, 0)
 				# Move at rushing speed
 				prev_left_light, prev_right_light = finch.light()
 				prev_light_cumulative = prev_left_light + prev_right_light
 				light_difference = prev_right_light - prev_left_light
-				light_difference *= 4
-				left_coefficient = light_difference + .5
-				right_coefficient = .5 - light_difference
+				light_difference *= 6
+				left_coefficient = light_difference + .7
+				right_coefficient = .7 - light_difference
 				finch.wheels(left_coefficient, right_coefficient)
 				#print(prev_left_light, " left light", prev_right_light, " right light")
 
@@ -92,16 +92,20 @@ def FinchRun():
 				left_obstacle, right_obstacle = finch.obstacle()
 				if(right_obstacle and not left_obstacle):
 					print("right obstacle")
-					finch.wheels(-.2, -.2)
-					time.sleep(2.0)
-					finch.wheels(-.2, .2)
-					time.sleep(2.0)
+					finch.wheels(-.3, -.3)
+					time.sleep(1.7)
+					finch.wheels(-.3, .3)
+					time.sleep(1.7)
+					#finch.wheels(.5, .5)
+					#time.sleep(1.5)
 				elif(left_obstacle and not right_obstacle):
 					print("left obstacle")
-					finch.wheels(-2, -.2)
-					time.sleep(2.0)
-					finch.wheels(.2, -.2)
-					time.sleep(2.0)
+					finch.wheels(-.3, -.3)
+					time.sleep(1.7)
+					finch.wheels(.3, -.3)
+					time.sleep(1.7)
+					#finch.wheels(.5, .5)
+					#time.sleep(1.5)
 				elif(left_obstacle and right_obstacle):
 					finch.wheels(-.3, -.3)
 					time.sleep(2.0)
@@ -122,7 +126,10 @@ def FinchRun():
 				finch.wheels(0.0, 0.0)
 				finch.led(0, 255, 0)
 
-				if (finch.light < wantedLight):
+				cur_left_light, cur_right_light = finch.light()
+
+
+				if (cur_right_light < wantedLight and cur_left_light < wantedLight):
 					curState = 0
 				#elif (finch.temperature < wantedTemp):
 					#curState = 3
