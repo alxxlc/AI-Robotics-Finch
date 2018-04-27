@@ -63,6 +63,9 @@ def FinchRun():
 				print(fStates[curState])
 
 		elif (fStates[curState] == "ObstAvoid"):
+			### Debugging
+			print("left:", left_obstacle, "\nright:", right_obstacle)
+
 			########### Perform Actions ###################
 			# Turn to the right until obstacle is gone
 			if(right_obstacle and (not left_obstacle)):
@@ -132,7 +135,7 @@ finch.close()
 # #!/usr/bin/python3
 
 # # AI Robotics S18 Semester Project
-# # Alex Coté - alc552
+# # Alex Cote - alc552
 # # Marc Moore - mnm419
 
 # from finch import Finch
